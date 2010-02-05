@@ -96,10 +96,6 @@ if (MJS_FLOAT_ARRAY_TYPE == Array) {
     V3.y = [0.0, 1.0, 0.0];
     V3.z = [0.0, 0.0, 1.0];
 
-    function V3(x, y, z) {
-        return [x, y, z];
-    }
-
     V3.clone = function V3_clone(a) {
         //MathUtils_assert(a.length == 3, "a.length == 3");
         return [a[0], a[1], a[2]];
@@ -108,24 +104,6 @@ if (MJS_FLOAT_ARRAY_TYPE == Array) {
     V3.x = new MJS_FLOAT_ARRAY_TYPE([1.0, 0.0, 0.0]);
     V3.y = new MJS_FLOAT_ARRAY_TYPE([0.0, 1.0, 0.0]);
     V3.z = new MJS_FLOAT_ARRAY_TYPE([0.0, 0.0, 1.0]);
-
-/*
- * Function: V3
- *
- * Creates a new 3-element vector with the given values.
- *
- * Parameters:
- *
- *   x,y,z - the 3 elements of the new vector.
- *
- * Returns:
- *
- * A new vector containing with the given argument values.
- */
-
-    function V3(x, y, z) {
-        return new MJS_FLOAT_ARRAY_TYPE([x, y, z]);
-    }
 
 /*
  * Function: V3.clone
@@ -431,17 +409,6 @@ if (MJS_FLOAT_ARRAY_TYPE == Array) {
               0.0, 0.0, 1.0, 0.0,
               0.0, 0.0, 0.0, 1.0];
 
-    function M4x4(m00, m01, m02, m03,
-                  m04, m05, m06, m07,
-                  m08, m09, m10, m11,
-                  m12, m13, m14, m15)
-    {
-        return [m00, m01, m02, m03,
-                m04, m05, m06, m07,
-                m08, m09, m10, m11,
-                m12, m13, m14, m15];
-    }
-
     M4x4.clone = function M4x4_clone(m) {
         //MathUtils_assert(m.length == 16, "m.length == 16");
         return new [m[0], m[1], m[2], m[3],
@@ -453,30 +420,6 @@ if (MJS_FLOAT_ARRAY_TYPE == Array) {
                                    0.0, 1.0, 0.0, 0.0,
                                    0.0, 0.0, 1.0, 0.0,
                                    0.0, 0.0, 0.0, 1.0]);
-
-/*
- * Function: M4x4
- *
- * Creates a new 4x4 matrix with the given values.
- *
- * Parameters:
- *
- *   m00..m15 - the 16 elements of the new matrix.
- *
- * Returns:
- *
- * A new matrix filled with the given argument values.
- */
-    function M4x4(m00, m01, m02, m03,
-                  m04, m05, m06, m07,
-                  m08, m09, m10, m11,
-                  m12, m13, m14, m15)
-    {
-        return new MJS_FLOAT_ARRAY_TYPE([m00, m01, m02, m03,
-                                         m04, m05, m06, m07,
-                                         m08, m09, m10, m11,
-                                         m12, m13, m14, m15]);
-    }
 
 /*
  * Function: M4x4.clone
