@@ -4,19 +4,19 @@
 <head>
 <script type="text/javascript" src="../mjs.js"></script>
 <script type="text/javascript">
-if (FLOAT_ARRAY_TYPE == Float32Array || FLOAT_ARRAY_TYPE == Float64Array) {
-    function randMatrix() {
-	return new FLOAT_ARRAY_TYPE([Math.random()*1000, Math.random()*1000, Math.random()*1000, Math.random()*1000,
-				     Math.random()*1000, Math.random()*1000, Math.random()*1000, Math.random()*1000,
-				     Math.random()*1000, Math.random()*1000, Math.random()*1000, Math.random()*1000,
-				     Math.random()*1000, Math.random()*1000, Math.random()*1000, Math.random()*1000]);
-    }
-} else if (FLOAT_ARRAY_TYPE == Array) {
+if (MJS_FLOAT_ARRAY_TYPE == Array) {
     function randMatrix() {
 	return [Math.random()*1000, Math.random()*1000, Math.random()*1000, Math.random()*1000,
 		Math.random()*1000, Math.random()*1000, Math.random()*1000, Math.random()*1000,
 		Math.random()*1000, Math.random()*1000, Math.random()*1000, Math.random()*1000,
 		Math.random()*1000, Math.random()*1000, Math.random()*1000, Math.random()*1000];
+    }
+} else {
+    function randMatrix() {
+	return new MJS_FLOAT_ARRAY_TYPE([Math.random()*1000, Math.random()*1000, Math.random()*1000, Math.random()*1000,
+					 Math.random()*1000, Math.random()*1000, Math.random()*1000, Math.random()*1000,
+					 Math.random()*1000, Math.random()*1000, Math.random()*1000, Math.random()*1000,
+					 Math.random()*1000, Math.random()*1000, Math.random()*1000, Math.random()*1000]);
     }
 }
 
@@ -25,9 +25,11 @@ var m2 = randMatrix();
 var m3 = randMatrix();
 var tmp;
 
+const COUNT = 1000000;
+
 function go1() {
     var t0 = Date.now();
-    for (var i = 0; i < 1000000; ++i) {
+    for (var i = 0; i < COUNT; ++i) {
 	//M4x4.mul(m1, m2, m3);
 	m3 = M4x4.mul(m1, m2);
 
@@ -43,7 +45,7 @@ function go1() {
 
 function go2() {
     var t0 = Date.now();
-    for (var i = 0; i < 1000000; ++i) {
+    for (var i = 0; i < COUNT; ++i) {
 	M4x4.mul(m1, m2, m3);
 	//m3 = M4x4.mul(m1, m2);
 
