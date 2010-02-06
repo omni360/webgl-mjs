@@ -552,9 +552,9 @@ M4x4.inverseOrthonormal = function M4x4_inverseOrthonormal(m, r) {
     M4x4.transpose(m, r);
     var t = [m[12], m[13], m[14]];
     r[3] = r[7] = r[11] = 0;
-    r[12] = -Vec3.dot([r[0], r[4], r[8]], t);
-    r[13] = -Vec3.dot([r[1], r[5], r[9]], t);
-    r[14] = -Vec3.dot([r[2], r[6], r[10]], t);
+    r[12] = -V3.dot([r[0], r[4], r[8]], t);
+    r[13] = -V3.dot([r[1], r[5], r[9]], t);
+    r[14] = -V3.dot([r[2], r[6], r[10]], t);
     return r;
 }
 
@@ -900,7 +900,7 @@ M4x4.makeRotate = function M4x4_makeRotate(angle, axis, r) {
     if (r == undefined)
         r = new MJS_FLOAT_ARRAY_TYPE(16);
 
-    axis = V3.normalize(axis);
+    axis = V3.normalize(axis, V3._temp1);
     var x = axis[0], y = axis[1], z = axis[2];
     var c = Math.cos(angle);
     var c1 = 1-c;
