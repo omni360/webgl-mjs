@@ -446,7 +446,8 @@ if (MJS_FLOAT_ARRAY_TYPE == Array) {
         //MathUtils_assert(m.length == 16, "m.length == 16");
         return new [m[0], m[1], m[2], m[3],
                     m[4], m[5], m[6], m[7],
-                    m[8], m[9], m[10], m[11]];
+                    m[8], m[9], m[10], m[11],
+                    m[12], m[13], m[14], m[15]];
     };
 } else {
     M4x4.I = new MJS_FLOAT_ARRAY_TYPE([1.0, 0.0, 0.0, 0.0,
@@ -738,7 +739,7 @@ M4x4.makeOrtho = function M4x4_makeOrtho (left, right, bottom, top, znear, zfar,
     r[12] = -(right+left)/(right-left);
     r[13] = -(top+bottom)/(top-bottom);
     r[14] = -(zfar+znear)/(zfar-znear);
-    r[15] = 0;
+    r[15] = 1;
 
     return r;
 };
@@ -1312,8 +1313,8 @@ M4x4.makeLookAt = function M4x4_makeLookAt (eye, center, up, r) {
 
     tm2[0] = 1; tm2[1] = 0; tm2[2] = 0; tm2[3] = 0;
     tm2[4] = 0; tm2[5] = 1; tm2[6] = 0; tm2[7] = 0;
-    tm2[8] = 0; tm2[9] = 0; tm2[10] = 1; tm2[3] = 0;
-    tm2[0] = -eye[0]; tm2[1] = -eye[1]; tm2[2] = -eye[2]; tm2[3] = 0;
+    tm2[8] = 0; tm2[9] = 0; tm2[10] = 1; tm2[11] = 0;
+    tm2[12] = -eye[0]; tm2[13] = -eye[1]; tm2[14] = -eye[2]; tm2[15] = 1;
 
     if (r == undefined)
         r = new MJS_FLOAT_ARRAY_TYPE(16);
