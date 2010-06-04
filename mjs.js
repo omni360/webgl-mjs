@@ -849,6 +849,76 @@ M4x4.mul = function M4x4_mul(a, b, r) {
 };
 
 /*
+ * Function: M4x4.mulAffine
+ *
+ * Performs r = a * b, assuming a and b are affine (elements 3,7,11,15 = 0,0,0,1)
+ *
+ * Parameters:
+ *
+ *   a - the first matrix operand
+ *   b - the second matrix operand
+ *   r - optional 4x4 matrix to store the result in
+ *
+ * Returns:
+ *
+ *   If r is specified, returns r after performing the operation.
+ *   Otherwise, returns a new 4x4 matrix with the result.
+ */
+M4x4.mulAffine = function M4x4_mulAffine(a, b, r) {
+    //MathUtils_assert(a.length == 16, "a.length == 16");
+    //MathUtils_assert(b.length == 16, "b.length == 16");
+    //MathUtils_assert(r == undefined || r.length == 16, "r == undefined || r.length == 16");
+    //MathUtils_assert(a != r && b != r, "a != r && b != r");
+
+    if (r == undefined)
+        r = new MJS_FLOAT_ARRAY_TYPE(16);
+    var a11 = a[0];
+    var a21 = a[1];
+    var a31 = a[2];
+    var a12 = a[4];
+    var a22 = a[5];
+    var a32 = a[6];
+    var a13 = a[8];
+    var a23 = a[9];
+    var a33 = a[10];
+    var a14 = a[12];
+    var a24 = a[13];
+    var a34 = a[14];
+
+    var b11 = b[0];
+    var b21 = b[1];
+    var b31 = b[2];
+    var b12 = b[4];
+    var b22 = b[5];
+    var b32 = b[6];
+    var b13 = b[8];
+    var b23 = b[9];
+    var b33 = b[10];
+    var b14 = b[12];
+    var b24 = b[13];
+    var b34 = b[14];
+
+    r[0] = a11 * b11 + a12 * b21 + a13 * b31;
+    r[1] = a21 * b11 + a22 * b21 + a23 * b31;
+    r[2] = a31 * b11 + a32 * b21 + a33 * b31;
+    r[3] = 0;
+    r[4] = a11 * b12 + a12 * b22 + a13 * b32;
+    r[5] = a21 * b12 + a22 * b22 + a23 * b32;
+    r[6] = a31 * b12 + a32 * b22 + a33 * b32;
+    r[7] = 0;
+    r[8] = a11 * b13 + a12 * b23 + a13 * b33;
+    r[9] = a21 * b13 + a22 * b23 + a23 * b33;
+    r[10] = a31 * b13 + a32 * b23 + a33 * b33;
+    r[11] = 0;
+    r[12] = a11 * b14 + a12 * b24 + a13 * b34 + a14;
+    r[13] = a21 * b14 + a22 * b24 + a23 * b34 + a24;
+    r[14] = a31 * b14 + a32 * b24 + a33 * b34 + a34;
+    r[15] = 1;
+
+    return r;
+};
+
+/*
  * Function: M4x4.makeRotate
  *
  * Creates a transformation matrix for rotation by angle radians about the 3-element vector axis.
