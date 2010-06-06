@@ -1697,3 +1697,93 @@ M4x4.transpose = function M4x4_transpose (m, r) {
 
     return r;
 };
+
+
+/*
+ * Function: M4x4.transformPoint
+ */
+M4x4.transformPoint = function M4x4_transformPoint (m, v, r) {
+    //MathUtils_assert(m.length == 16, "m.length == 16");
+    //MathUtils_assert(v.length == 3, "v.length == 3");
+    //MathUtils_assert(r == undefined || r.length == 3, "r == undefined || r.length == 3");
+    if (r == undefined)
+        r = new MJS_FLOAT_ARRAY_TYPE(3);
+
+    var v0 = v[0], v1 = v[1], v2 = v[2];
+
+    r[0] = m[0] * v0 + m[4] * v1 + m[8] * v2 + m[12];
+    r[1] = m[1] * v0 + m[5] * v1 + m[9] * v2 + m[13];
+    r[2] = m[2] * v0 + m[6] * v1 + m[10] * v2 + m[14];
+    var w = m[3] * v0 + m[7] * v1 + m[11] * v2 + m[15];
+
+    if (w != 1.0) {
+        r[0] /= w;
+        r[1] /= w;
+        r[2] /= w;
+    }
+
+    return r;
+};
+
+/*
+ * Function: M4x4.transformLine
+ */
+M4x4.transformLine = function M4x4_transformLine(m, v, r) {
+    //MathUtils_assert(m.length == 16, "m.length == 16");
+    //MathUtils_assert(v.length == 3, "v.length == 3");
+    //MathUtils_assert(r == undefined || r.length == 3, "r == undefined || r.length == 3");
+    if (r == undefined)
+        r = new MJS_FLOAT_ARRAY_TYPE(3);
+
+    var v0 = v[0], v1 = v[1], v2 = v[2];
+    r[0] = m[0] * v0 + m[4] * v1 + m[8] * v2;
+    r[1] = m[1] * v0 + m[5] * v1 + m[9] * v2;
+    r[2] = m[2] * v0 + m[6] * v1 + m[10] * v2;
+    var w = m[3] * v0 + m[7] * v1 + m[11] * v2;
+
+    if (w != 1.0) {
+        r[0] /= w;
+        r[1] /= w;
+        r[2] /= w;
+    }
+
+    return r;
+};
+
+
+/*
+ * Function: M4x4.transformPointAffine
+ */
+M4x4.transformPointAffine = function M4x4_transformPointAffine (m, v, r) {
+    //MathUtils_assert(m.length == 16, "m.length == 16");
+    //MathUtils_assert(v.length == 3, "v.length == 3");
+    //MathUtils_assert(r == undefined || r.length == 3, "r == undefined || r.length == 3");
+    if (r == undefined)
+        r = new MJS_FLOAT_ARRAY_TYPE(3);
+
+    var v0 = v[0], v1 = v[1], v2 = v[2];
+
+    r[0] = m[0] * v0 + m[4] * v1 + m[8] * v2 + m[12];
+    r[1] = m[1] * v0 + m[5] * v1 + m[9] * v2 + m[13];
+    r[2] = m[2] * v0 + m[6] * v1 + m[10] * v2 + m[14];
+
+    return r;
+};
+
+/*
+ * Function: M4x4.transformLineAffine
+ */
+M4x4.transformLineAffine = function M4x4_transformLineAffine(m, v, r) {
+    //MathUtils_assert(m.length == 16, "m.length == 16");
+    //MathUtils_assert(v.length == 3, "v.length == 3");
+    //MathUtils_assert(r == undefined || r.length == 3, "r == undefined || r.length == 3");
+    if (r == undefined)
+        r = new MJS_FLOAT_ARRAY_TYPE(3);
+
+    var v0 = v[0], v1 = v[1], v2 = v[2];
+    r[0] = m[0] * v0 + m[4] * v1 + m[8] * v2;
+    r[1] = m[1] * v0 + m[5] * v1 + m[9] * v2;
+    r[2] = m[2] * v0 + m[6] * v1 + m[10] * v2;
+
+    return r;
+};
