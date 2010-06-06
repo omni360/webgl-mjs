@@ -357,7 +357,7 @@ V3.scale = function V3_scale(a, k, r) {
     r[1] = a[1] * k;
     r[2] = a[2] * k;
     return r;
-}
+};
 
 /*
  * Function: V3.dot
@@ -557,7 +557,7 @@ M4x4.inverseOrthonormal = function M4x4_inverseOrthonormal(m, r) {
     r[13] = -V3.dot([r[1], r[5], r[9]], t);
     r[14] = -V3.dot([r[2], r[6], r[10]], t);
     return r;
-}
+};
 
 /*
  * Function: M4x4.inverseTo3x3
@@ -1485,7 +1485,7 @@ M4x4.translate3Self = function M4x4_translate3Self (x, y, z, m) {
     m[14] += m[2] * x + m[6] * y + m[10] * z;
     m[15] += m[3] * x + m[7] * y + m[11] * z;
     return m;
-}
+};
 
 /*
  * Function: M4x4.translate3
@@ -1668,7 +1668,7 @@ M4x4.transposeSelf = function M4x4_transposeSelf (m) {
     tmp = m[7]; m[7] = m[13]; m[13] = tmp;
     tmp = m[11]; m[11] = m[14]; m[14] = tmp;
     return m;
-}
+};
 /*
  * Function: M4x4.transpose
  */
