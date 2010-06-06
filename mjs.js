@@ -33,7 +33,7 @@
 
 /*
  * Constant: MJS_VERSION
- * 
+ *
  * mjs version number aa.bb.cc, encoded as an integer of the form:
  * 0xaabbcc.
  */
@@ -41,9 +41,9 @@ const MJS_VERSION = 0x000000;
 
 /*
  * Constant: MJS_DO_ASSERT
- * 
+ *
  * Enables or disables runtime assertions.
- * 
+ *
  * For potentially more performance, the assert methods can be
  * commented out in each place where they are called.
  */
@@ -57,7 +57,7 @@ try { WebGLFloatArray; } catch (x) { WebGLFloatArray = Float32Array; }
  * Constant: MJS_FLOAT_ARRAY_TYPE
  *
  * The base float array type.  By default, WebGLFloatArray.
- * 
+ *
  * mjs can work with any array-like elements, but if an array
  * creation is requested, it will create an array of the type
  * MJS_FLOAT_ARRAY_TYPE.  Also, the builtin constants such as (M4x4.I)
@@ -1134,9 +1134,15 @@ M4x4.rotate = function M4x4_rotate(angle, axis, m, r) {
 
     if (r == undefined)
         r = new MJS_FLOAT_ARRAY_TYPE(16);
-
-    var im = 1.0 / V3.length(axis);
-    var x = axis[0] * im, y = axis[1] * im, z = axis[2] * im;
+    var a0=axis [0], a1=axis [1], a2=axis [2];
+    var l = Math.sqrt(a0*a0 + a1*a1 + a2*a2);
+    var x = a0, y = a1, z = a2;
+    if (l != 1.0) {
+        var im = 1.0 / l;
+        x *= im;
+        y *= im;
+        z *= im;
+    }
     var c = Math.cos(angle);
     var c1 = 1-c;
     var s = Math.sin(angle);
@@ -1159,10 +1165,7 @@ M4x4.rotate = function M4x4_rotate(angle, axis, m, r) {
     var m23 = m[9];
     var m33 = m[10];
     var m43 = m[11];
-    var m14 = m[12];
-    var m24 = m[13];
-    var m34 = m[14];
-    var m44 = m[15];
+
     var t11 = x * x * c1 + c;
     var t21 = xyc1 + zs;
     var t31 = xzc1 - ys;
@@ -1172,6 +1175,7 @@ M4x4.rotate = function M4x4_rotate(angle, axis, m, r) {
     var t13 = xzc1 + ys;
     var t23 = yzc1 - xs;
     var t33 = z * z * c1 + c;
+
     r[0] = m11 * t11 + m12 * t21 + m13 * t31;
     r[1] = m21 * t11 + m22 * t21 + m23 * t31;
     r[2] = m31 * t11 + m32 * t21 + m33 * t31;
@@ -1184,11 +1188,12 @@ M4x4.rotate = function M4x4_rotate(angle, axis, m, r) {
     r[9] = m21 * t13 + m22 * t23 + m23 * t33;
     r[10] = m31 * t13 + m32 * t23 + m33 * t33;
     r[11] = m41 * t13 + m42 * t23 + m43 * t33;
-    r[12] = m14;
-    r[13] = m24;
-    r[14] = m34;
-    r[15] = m44;
-
+    if (r != m) {
+        r[12] = m[12];
+        r[13] = m[13];
+        r[14] = m[14];
+        r[15] = m[15];
+    }
     return r;
 };
 
@@ -1287,6 +1292,22 @@ M4x4.scale3 = function M4x4_scale3(x, y, z, m, r) {
     //MathUtils_assert(m.length == 16, "m.length == 16");
     //MathUtils_assert(r == undefined || r.length == 16, "r == undefined || r.length == 16");
 
+    if (r == m) {
+        m[0] *= x;
+        m[1] *= x;
+        m[2] *= x;
+        m[3] *= x;
+        m[4] *= y;
+        m[5] *= y;
+        m[6] *= y;
+        m[7] *= y;
+        m[8] *= z;
+        m[9] *= z;
+        m[10] *= z;
+        m[11] *= z;
+        return m;
+    }
+
     if (r == undefined)
         r = new MJS_FLOAT_ARRAY_TYPE(16);
 
@@ -1316,6 +1337,22 @@ M4x4.scale3 = function M4x4_scale3(x, y, z, m, r) {
 M4x4.scale1 = function M4x4_scale1(k, m, r) {
     //MathUtils_assert(m.length == 16, "m.length == 16");
     //MathUtils_assert(r == undefined || r.length == 16, "r == undefined || r.length == 16");
+    if (r == m) {
+        m[0] *= k;
+        m[1] *= k;
+        m[2] *= k;
+        m[3] *= k;
+        m[4] *= k;
+        m[5] *= k;
+        m[6] *= k;
+        m[7] *= k;
+        m[8] *= k;
+        m[9] *= k;
+        m[10] *= k;
+        m[11] *= k;
+        return m;
+    }
+
 
     if (r == undefined)
         r = new MJS_FLOAT_ARRAY_TYPE(16);
@@ -1347,11 +1384,27 @@ M4x4.scale = function M4x4_scale(v, m, r) {
     //MathUtils_assert(v.length == 3, "v.length == 3");
     //MathUtils_assert(m.length == 16, "m.length == 16");
     //MathUtils_assert(r == undefined || r.length == 16, "r == undefined || r.length == 16");
+    var x = v[0], y = v[1], z = v[2];
+
+    if (r == m) {
+        m[0] *= x;
+        m[1] *= x;
+        m[2] *= x;
+        m[3] *= x;
+        m[4] *= y;
+        m[5] *= y;
+        m[6] *= y;
+        m[7] *= y;
+        m[8] *= z;
+        m[9] *= z;
+        m[10] *= z;
+        m[11] *= z;
+        return m;
+    }
 
     if (r == undefined)
         r = new MJS_FLOAT_ARRAY_TYPE(16);
 
-    var x = v[0], y = v[1], z = v[2];
 
     r[0] = m[0] * x;
     r[1] = m[1] * x;
@@ -1422,11 +1475,32 @@ M4x4.makeTranslate = function M4x4_makeTranslate (v, r) {
 };
 
 /*
+ * Function: M4x4.translate3Self
+ */
+M4x4.translate3Self = function M4x4_translate3Self (x, y, z, m) {
+    //MathUtils_assert(m.length == 16, "m.length == 16");
+    //MathUtils_assert(r == undefined || r.length == 16, "r == undefined || r.length == 16");
+    m[12] += m[0] * x + m[4] * y + m[8] * z;
+    m[13] += m[1] * x + m[5] * y + m[9] * z;
+    m[14] += m[2] * x + m[6] * y + m[10] * z;
+    m[15] += m[3] * x + m[7] * y + m[11] * z;
+    return m;
+}
+
+/*
  * Function: M4x4.translate3
  */
 M4x4.translate3 = function M4x4_translate3 (x, y, z, m, r) {
     //MathUtils_assert(m.length == 16, "m.length == 16");
     //MathUtils_assert(r == undefined || r.length == 16, "r == undefined || r.length == 16");
+
+    if (r == m) {
+        m[12] += m[0] * x + m[4] * y + m[8] * z;
+        m[13] += m[1] * x + m[5] * y + m[9] * z;
+        m[14] += m[2] * x + m[6] * y + m[10] * z;
+        m[15] += m[3] * x + m[7] * y + m[11] * z;
+        return m;
+    }
 
     if (r == undefined)
         r = new MJS_FLOAT_ARRAY_TYPE(16);
@@ -1443,10 +1517,7 @@ M4x4.translate3 = function M4x4_translate3 (x, y, z, m, r) {
     var m23 = m[9];
     var m33 = m[10];
     var m43 = m[11];
-    var m14 = m[12];
-    var m24 = m[13];
-    var m34 = m[14];
-    var m44 = m[15];
+
 
     r[0] = m11;
     r[1] = m21;
@@ -1460,10 +1531,10 @@ M4x4.translate3 = function M4x4_translate3 (x, y, z, m, r) {
     r[9] = m23;
     r[10] = m33;
     r[11] = m43;
-    r[12] = m11 * x + m12 * y + m13 * z + m14;
-    r[13] = m21 * x + m22 * y + m23 * z + m24;
-    r[14] = m31 * x + m32 * y + m33 * z + m34;
-    r[15] = m41 * x + m42 * y + m43 * z + m44;
+    r[12] = m11 * x + m12 * y + m13 * z + m[12];
+    r[13] = m21 * x + m22 * y + m23 * z + m[13];
+    r[14] = m31 * x + m32 * y + m33 * z + m[14];
+    r[15] = m41 * x + m42 * y + m43 * z + m[15];
 
     return r;
 };
@@ -1477,7 +1548,19 @@ M4x4.translate1 = function M4x4_translate1 (k, m, r) {
 
     return M4x4.translate3(k, k, k, m, r);
 };
-
+/*
+ * Function: M4x4.translateSelf
+ */
+M4x4.translateSelf = function M4x4_translateSelf (v, m) {
+    //MathUtils_assert(v.length == 3, "v.length == 3");
+    //MathUtils_assert(m.length == 16, "m.length == 16");
+    var x=v[0], y=v[1], z=v[2];
+    m[12] += m[0] * x + m[4] * y + m[8] * z;
+    m[13] += m[1] * x + m[5] * y + m[9] * z;
+    m[14] += m[2] * x + m[6] * y + m[10] * z;
+    m[15] += m[3] * x + m[7] * y + m[11] * z;
+    return m;
+};
 /*
  * Function: M4x4.translate
  */
@@ -1485,8 +1568,49 @@ M4x4.translate = function M4x4_translate (v, m, r) {
     //MathUtils_assert(v.length == 3, "v.length == 3");
     //MathUtils_assert(m.length == 16, "m.length == 16");
     //MathUtils_assert(r == undefined || r.length == 16, "r == undefined || r.length == 16");
+    var x=v[0], y=v[1], z=v[2];
+    if (r == m) {
+        m[12] += m[0] * x + m[4] * y + m[8] * z;
+        m[13] += m[1] * x + m[5] * y + m[9] * z;
+        m[14] += m[2] * x + m[6] * y + m[10] * z;
+        m[15] += m[3] * x + m[7] * y + m[11] * z;
+        return m;
+    }
 
-    return  M4x4.translate3(v[0], v[1], v[2], m, r);
+    if (r == undefined)
+        r = new MJS_FLOAT_ARRAY_TYPE(16);
+
+    var m11 = m[0];
+    var m21 = m[1];
+    var m31 = m[2];
+    var m41 = m[3];
+    var m12 = m[4];
+    var m22 = m[5];
+    var m32 = m[6];
+    var m42 = m[7];
+    var m13 = m[8];
+    var m23 = m[9];
+    var m33 = m[10];
+    var m43 = m[11];
+
+    r[0] = m11;
+    r[1] = m21;
+    r[2] = m31;
+    r[3] = m41;
+    r[4] = m12;
+    r[5] = m22;
+    r[6] = m32;
+    r[7] = m42;
+    r[8] = m13;
+    r[9] = m23;
+    r[10] = m33;
+    r[11] = m43;
+    r[12] = m11 * x + m12 * y + m13 * z + m[12];
+    r[13] = m21 * x + m22 * y + m23 * z + m[13];
+    r[14] = m31 * x + m32 * y + m33 * z + m[14];
+    r[15] = m41 * x + m42 * y + m43 * z + m[15];
+
+    return r;
 };
 
 /*
@@ -1532,6 +1656,19 @@ M4x4.makeLookAt = function M4x4_makeLookAt (eye, center, up, r) {
     return M4x4.mul(tm1, tm2, r);
 };
 
+/*
+ * Function: M4x4.transposeSelf
+ */
+M4x4.transposeSelf = function M4x4_transposeSelf (m) {
+    //MathUtils_assert(m.length == 16, "m.length == 16");
+    var tmp = m[1]; m[1] = m[4]; m[4] = tmp;
+    tmp = m[2]; m[2] = m[8]; m[8] = tmp;
+    tmp = m[3]; m[3] = m[12]; m[12] = tmp;
+    tmp = m[6]; m[6] = m[9]; m[9] = tmp;
+    tmp = m[7]; m[7] = m[13]; m[13] = tmp;
+    tmp = m[11]; m[11] = m[14]; m[14] = tmp;
+    return m;
+}
 /*
  * Function: M4x4.transpose
  */
