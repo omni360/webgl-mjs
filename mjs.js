@@ -413,6 +413,53 @@ V3.cross = function V3_cross(a, b, r) {
 };
 
 /*
+ * Function: V3.mul4x4
+ *
+ * Perform
+ * r = m * v.
+ *
+ * Parameters:
+ *
+ *   m - the 4x4 matrix operand
+ *   v - the 3-element vector operand
+ *   r - optional vector to store the result in
+ *
+ * Returns:
+ *
+ *   If r is specified, returns r after performing the operation.
+ *   Otherwise, returns a new 3-element vector with the result.
+ *   The 4-element result vector is divided by the w component
+ *   and returned as a 3-element vector.
+ */
+V3.mul4x4 = function V3_mul4x4(m, v, r) {
+    //MathUtils_assert(m.length == 16, "m.length == 16");
+    //MathUtils_assert(v.length == 3, "v.length == 3");
+    //MathUtils_assert(r == undefined || r.length == 3, "r == undefined || r.length == 3");
+
+    var w;
+    var tmp = V3._temp1;
+    if (r == undefined)
+        r = new MJS_FLOAT_ARRAY_TYPE(3);
+    tmp[0] = m[ 3];
+    tmp[1] = m[ 7];
+    tmp[2] = m[11];
+    w    =  V3.dot(v, tmp) + m[15];
+    tmp[0] = m[ 0];
+    tmp[1] = m[ 4];
+    tmp[2] = m[ 8];
+    r[0] = (V3.dot(v, tmp) + m[12])/w;
+    tmp[0] = m[ 1];
+    tmp[1] = m[ 5];
+    tmp[2] = m[ 9];
+    r[1] = (V3.dot(v, tmp) + m[13])/w;
+    tmp[0] = m[ 2];
+    tmp[1] = m[ 6];
+    tmp[2] = m[10];
+    r[2] = (V3.dot(v, tmp) + m[14])/w;
+    return r;
+};
+
+/*
  * Class: M4x4
  *
  * Methods for working with 4x4 matrices.  A matrix is represented by a 16-element array
